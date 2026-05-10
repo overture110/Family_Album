@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家训墙 - 拾光·吾家</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/motto.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav-left">
+                <a href="{% url 'photos:home' %}" class="nav-link">首页</a>
+            </nav>
+            <div class="brand">
+                <h1 class="logo">拾光 · 吾家</h1>
+                <p class="slogan-sub">记录每一寸明媚，传承每一份家温</p>
+            </div>
+            <nav class="nav-right">
+                <a href="{% url 'photos:motto' %}" class="nav-link btn-like active">家训墙</a>
+                <a href="{% url 'photos:timeline' %}" class="nav-link btn-like">时间线</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="motto-hero">
+            <h2 class="hero-title">拾光 · 传家</h2>
+            <p class="hero-subtitle">门楣间的清风与暖阳</p>
+        </section>
+
+        <section class="motto-intro">
+            <p>在「拾光 · 吾家」的方寸天地里，若说合照是岁月的容颜，那么这面“家训墙”便是我们这一家的灵魂。</p>
+            <p>家风，是一个家庭最隐形的财富，也是最显性的传承。对于新权与金蝶而言，家不仅是遮风避雨的港湾，更是一场关于尊重、自由与爱的修行。我们将这份初衷凝结为文字，刻在云端，也刻在心间。</p>
+        </section>
+
+        <section class="motto-principles">
+            <div class="principle-card" id="principle-1">
+                <div class="principle-number">壹</div>
+                <div class="principle-content">
+                    <h3 class="principle-title">敬爱：以尊重，敬岁月</h3>
+                    <p>家，首先是“人”的聚合。我们主张家庭成员间不仅有血脉的勾连，更有灵魂的对等。互敬互爱，不是客套，而是看重对方的付出，体谅对方的难处。在这一方屋檐下，每一个名字都重逾千金，每一份情感都值得温柔以待。</p>
+                </div>
+            </div>
+
+            <div class="principle-card" id="principle-2">
+                <div class="principle-number">贰</div>
+                <div class="principle-content">
+                    <h3 class="principle-title">边界：以关怀，代干涉</h3>
+                    <p>最好的长辈之爱，是“知冷暖，远忧烦”。我们提倡：在子女的婚姻与感情里，长辈应是守望者而非干预者。尽可能少地干扰那份独立的小天地，而尽可能多地关心彼此的身体与生活。正如金蝶翩跹，需有自由的空气，方能舞出最美的姿态。</p>
+                </div>
+            </div>
+
+            <div class="principle-card" id="principle-3">
+                <div class="principle-number">叁</div>
+                <div class="principle-content">
+                    <h3 class="principle-title">桥梁：以沟通，消冰霜</h3>
+                    <p>在这座名为“家”的建筑里，积极沟通是唯一的承重墙。凡事有交代，件件有回音。不让误解在沉默中发酵，不让委屈在关门声中堆积。在这里，每一个建议都将被倾听，每一份情绪都将被拥抱。</p>
+                </div>
+            </div>
+
+            <div class="principle-card" id="principle-4">
+                <div class="principle-number">肆</div>
+                <div class="principle-content">
+                    <h3 class="principle-title">守望：传统与自由的共生</h3>
+                    <p>我们尊重传统，因为那是陈郑两家薪火相传的根基，刻着父辈的智慧与坚守；我们拥抱自由，因为那是年轻一代探索世界的羽翼，满载着新时代的理想。子女礼敬父母的厚重，父母珍视子女的独立，新老之间，各美其美，美美与共。</p>
+                </div>
+            </div>
+
+            <div class="principle-card" id="principle-5">
+                <div class="principle-number">伍</div>
+                <div class="principle-content">
+                    <h3 class="principle-title">归宿：爱自我，亦为集体</h3>
+                    <p>每个人都是独立的个体，我们鼓励每一位成员热烈地爱自己，丰盈自己的内心。然而，当步入这个名为“家”的集体，我们也愿为了那份共同的幸福，舍弃部分的自我。这种舍弃并非牺牲，而是一种更高层级的成就——因为我们知道，只有当“家”这棵大树繁茂时，每一片叶子才能分得阳光。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="motto-conclusion">
+            <p class="conclusion-poem">新光熠熠，照见权责与担当；金影翩翩，舞动蝶变与温情。</p>
+            <p>愿这面墙上的寥寥数语，能化作我们这一家处世的准绳。无论世界如何变迁，走进「拾光 · 吾家」，便走进了这份清朗的家风里。</p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy;新光熠熠权入画，金影翩翩蝶归家</p>
+    </footer>
+
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="{% url 'photos:home' %}" class="mobile-nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>首页</span>
+        </a>
+        <a href="{% url 'photos:motto' %}" class="mobile-nav-item active">
+            <span class="nav-icon">📜</span>
+            <span>家训墙</span>
+        </a>
+        <a href="{% url 'photos:timeline' %}" class="mobile-nav-item">
+            <span class="nav-icon">📅</span>
+            <span>时间线</span>
+        </a>
+    </nav>
+</body>
+</html>

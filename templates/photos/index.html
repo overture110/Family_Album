@@ -10,10 +10,16 @@
 <body>
     <header class="header">
         <div class="container">
-            <h1 class="logo">📷 家庭相册</h1>
-            <nav class="nav">
+            <nav class="nav-left">
                 <a href="/" class="nav-link active">首页</a>
-                <a href="{% url 'photos:timeline' %}" class="nav-link">时间线</a>
+            </nav>
+            <div class="brand">
+                <h1 class="logo">拾光 · 吾家</h1>
+                <p class="slogan-sub">记录每一寸明媚，传承每一份家温</p>
+            </div>
+            <nav class="nav-right">
+                <a href="{% url 'photos:motto' %}" class="nav-link btn-like">家训墙</a>
+                <a href="{% url 'photos:timeline' %}" class="nav-link btn-like">时间线</a>
             </nav>
         </div>
     </header>
@@ -51,6 +57,23 @@
             </div>
         </section>
 
+        <section class="family-motto-section">
+            <div class="motto-header">
+                <h2 class="motto-title">我们这一家 · 五项家风</h2>
+            </div>
+            <div class="motto-container">
+                {% for motto in family_mottos %}
+                <div class="motto-card">
+                    <div class="motto-icon">{{ motto.subtitle }}</div>
+                    <div class="motto-content">
+                        <h3 class="motto-name">{{ motto.title }}</h3>
+                        <p class="motto-text">{{ motto.content }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
         <section class="recent-section">
             <h2 class="section-title">最近照片</h2>
             <div class="photo-grid" id="photoGrid">
@@ -72,7 +95,7 @@
     </main>
 
     <footer class="footer">
-        <p>&copy; 2024 家庭相册 - 记录美好回忆</p>
+        <p>&copy;新光熠熠权入画，金影翩翩蝶归家</p>
     </footer>
 
     <nav class="mobile-nav" id="mobileNav">

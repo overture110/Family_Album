@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+{% load custom_filters %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,58 +11,83 @@
 <body>
     <header class="header">
         <div class="container">
-            <h1 class="logo">📷 家庭相册</h1>
-            <nav class="nav">
+            <nav class="nav-left">
                 <a href="{% url 'photos:home' %}" class="nav-link">首页</a>
-                <a href="{% url 'photos:timeline' %}" class="nav-link active">时间线</a>
+            </nav>
+            <div class="brand">
+                <h1 class="logo">拾光 · 吾家</h1>
+                <p class="slogan-sub">记录每一寸明媚，传承每一份家温</p>
+            </div>
+            <nav class="nav-right">
+                <a href="{% url 'photos:motto' %}" class="nav-link btn-like">家训墙</a>
+                <a href="{% url 'photos:timeline' %}" class="nav-link btn-like active">时间线</a>
             </nav>
         </div>
     </header>
 
     <main class="main">
-        <section class="timeline-header">
+        <section class="timeline-hero">
             <h2 class="section-title">回忆时间线</h2>
-            <div class="year-nav" id="yearNav">
-                {% for album in albums %}
-                <button class="year-btn {% if forloop.first %}active{% endif %}" data-year="{{ album.year }}">
-                    {{ album.year }}
-                    <span class="year-count">{{ album.photo_count }}张</span>
-                </button>
-                {% empty %}
-                <p class="empty-message">暂无相册，请在后台添加</p>
-                {% endfor %}
-            </div>
+            <p class="timeline-subtitle">记录每一个珍贵时刻</p>
         </section>
 
-        <section class="timeline-content" id="timelineContent">
-            {% for album in albums %}
-            <div class="year-section" data-year="{{ album.year }}" {% if not forloop.first %}style="display:none;"{% endif %}>
-                <h3 class="year-title">{{ album.year }}年</h3>
-                <div class="timeline-grid">
-                    {% for photo in album.photos.all %}
-                    <a href="{% url 'photos:photo_detail' photo.pk %}" class="timeline-card">
-                        <div class="timeline-card-image">
-                            <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
-                        </div>
-                        <div class="timeline-card-info">
-                            <h4>{{ photo.title }}</h4>
-                            <span class="photo-date">{{ photo.taken_date }}</span>
-                            {% if photo.description %}
-                            <p class="photo-desc">{{ photo.description|truncatechars:50 }}</p>
+        <section class="timeline-container">
+            {% for year in years %}
+            <div class="year-group">
+                <h2 class="year-heading">{{ year }} 年</h2>
+                {% for album in albums_by_year|get_item:year %}
+                <div class="album-row" onclick="openAlbumCarousel({{ album.id }})">
+                    <div class="album-month">{{ album.date_display }}</div>
+                    <article class="album-card">
+                        <div class="card-cover">
+                            {% if album.cover_photo %}
+                            <img src="{{ album.cover_photo.image.url }}" alt="{{ album.name }}" loading="lazy">
+                            {% else %}
+                            <img src="https://picsum.photos/600/400?random={{ album.id }}" alt="{{ album.name }}" loading="lazy">
                             {% endif %}
+                            <div class="card-overlay">
+                                <span class="view-album">浏览相册</span>
+                            </div>
                         </div>
-                    </a>
-                    {% empty %}
-                    <p class="empty-message">该相册暂无照片</p>
-                    {% endfor %}
+                        <div class="card-info">
+                            <h3 class="album-name">{{ album.name }}</h3>
+                            <span class="photo-count">{{ album.photos.count }} 张照片</span>
+                        </div>
+                    </article>
                 </div>
+                {% endfor %}
+            </div>
+            {% empty %}
+            <div class="empty-timeline">
+                <div class="empty-icon">📸</div>
+                <h3>暂无相册</h3>
+                <p>点击后台管理添加您的第一个相册吧</p>
             </div>
             {% endfor %}
         </section>
     </main>
 
+    <div class="album-modal" id="albumModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">相册名称</h3>
+                <button class="modal-close" onclick="closeAlbumModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="carousel-wrapper">
+                    <button class="carousel-btn carousel-btn-prev" onclick="prevPhoto()">❮</button>
+                    <div class="photo-display" id="photoDisplay">
+                        <img id="currentPhoto" src="" alt="">
+                    </div>
+                    <button class="carousel-btn carousel-btn-next" onclick="nextPhoto()">❯</button>
+                </div>
+                <div class="carousel-indicators" id="carouselIndicators"></div>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
-        <p>&copy; 2024 家庭相册 - 记录美好回忆</p>
+        <p>&copy;新光熠熠权入画，金影翩翩蝶归家</p>
     </footer>
 
     <nav class="mobile-nav" id="mobileNav">
@@ -76,5 +102,79 @@
     </nav>
 
     <script src="/static/js/timeline.js"></script>
+    <script>
+        let currentAlbumPhotos = [];
+        let currentPhotoIndex = 0;
+
+        async function openAlbumCarousel(albumId) {
+            const modal = document.getElementById('albumModal');
+            const response = await fetch(`/api/albums/?album_id=${albumId}`);
+            const albums = await response.json();
+
+            if (albums.length === 0) return;
+
+            const album = albums[0];
+            document.getElementById('modalTitle').textContent = album.name;
+
+            const photosResponse = await fetch(`/api/photos/?album_id=${albumId}`);
+            currentAlbumPhotos = await photosResponse.json();
+
+            if (currentAlbumPhotos.length > 0) {
+                currentPhotoIndex = 0;
+                showPhoto(currentPhotoIndex);
+                buildIndicators();
+                modal.style.display = 'flex';
+            }
+        }
+
+        function closeAlbumModal() {
+            document.getElementById('albumModal').style.display = 'none';
+            currentAlbumPhotos = [];
+        }
+
+        function showPhoto(index) {
+            if (currentAlbumPhotos.length === 0) return;
+            const photo = currentAlbumPhotos[index];
+            document.getElementById('currentPhoto').src = photo.src;
+
+            const indicators = document.querySelectorAll('.indicator');
+            indicators.forEach((ind, i) => {
+                ind.classList.toggle('active', i === index);
+            });
+        }
+
+        function prevPhoto() {
+            currentPhotoIndex = (currentPhotoIndex - 1 + currentAlbumPhotos.length) % currentAlbumPhotos.length;
+            showPhoto(currentPhotoIndex);
+        }
+
+        function nextPhoto() {
+            currentPhotoIndex = (currentPhotoIndex + 1) % currentAlbumPhotos.length;
+            showPhoto(currentPhotoIndex);
+        }
+
+        function buildIndicators() {
+            const container = document.getElementById('carouselIndicators');
+            container.innerHTML = '';
+            currentAlbumPhotos.forEach((_, i) => {
+                const ind = document.createElement('span');
+                ind.className = 'indicator' + (i === 0 ? ' active' : '');
+                ind.onclick = () => { currentPhotoIndex = i; showPhoto(i); };
+                container.appendChild(ind);
+            });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('albumModal').style.display === 'flex') {
+                if (e.key === 'ArrowLeft') prevPhoto();
+                if (e.key === 'ArrowRight') nextPhoto();
+                if (e.key === 'Escape') closeAlbumModal();
+            }
+        });
+
+        document.getElementById('albumModal').addEventListener('click', (e) => {
+            if (e.target.id === 'albumModal') closeAlbumModal();
+        });
+    </script>
 </body>
 </html>

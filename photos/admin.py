@@ -5,14 +5,30 @@ from .models import Album, Photo
 class PhotoInline(admin.TabularInline):
     model = Photo
     extra = 1
+    fields = ['title', 'image', 'taken_date', 'description']
 
 
 @admin.register(Album)
 class AlbumAdmin(admin.ModelAdmin):
-    list_display = ['name', 'year', 'created_at']
-    list_filter = ['year']
-    search_fields = ['name']
+    list_display = ['name', 'folder_name', 'year', 'album_date', 'is_holiday', 'holiday_name']
+    list_filter = ['year', 'is_holiday', 'created_at']
+    search_fields = ['name', 'folder_name', 'holiday_name']
+    readonly_fields = ['created_at']
     inlines = [PhotoInline]
+
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'folder_name', 'year', 'album_date')
+        }),
+        ('节日标签', {
+            'fields': ('is_holiday', 'holiday_name'),
+            'classes': ('collapse',)
+        }),
+        ('高级', {
+            'fields': ('cover_photo', 'description'),
+            'classes': ('collapse',)
+        }),
+    )
 
 
 @admin.register(Photo)
