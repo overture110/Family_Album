@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ photo.title }} - 家庭相册</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/carousel.css">
+    <style>
+        .photo-detail {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .photo-detail-image {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .photo-detail-info {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        .photo-detail-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+        .photo-detail-meta {
+            color: var(--text-color);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .photo-detail-desc {
+            line-height: 1.8;
+            color: var(--text-color);
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        .back-btn:hover {
+            background: var(--accent-color);
+        }
+        @media (max-width: 768px) {
+            .photo-detail { padding: 12px; }
+            .photo-detail-title { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">📷 家庭相册</h1>
+            <nav class="nav">
+                <a href="{% url 'photos:home' %}" class="nav-link">首页</a>
+                <a href="{% url 'photos:timeline' %}" class="nav-link">时间线</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="photo-detail">
+            <img src="{{ photo.image.url }}" alt="{{ photo.title }}" class="photo-detail-image">
+            <div class="photo-detail-info">
+                <h2 class="photo-detail-title">{{ photo.title }}</h2>
+                <p class="photo-detail-meta">
+                    📅 {{ photo.taken_date }} | 📁 {{ photo.album.name }}
+                </p>
+                {% if photo.description %}
+                <p class="photo-detail-desc">{{ photo.description }}</p>
+                {% endif %}
+                <a href="javascript:history.back()" class="back-btn">← 返回</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 家庭相册 - 记录美好回忆</p>
+    </footer>
+
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="{% url 'photos:home' %}" class="mobile-nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>首页</span>
+        </a>
+        <a href="{% url 'photos:timeline' %}" class="mobile-nav-item">
+            <span class="nav-icon">📅</span>
+            <span>时间线</span>
+        </a>
+    </nav>
+</body>
+</html>

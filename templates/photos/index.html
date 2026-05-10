@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家庭相册 - 回忆录</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/carousel.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">📷 家庭相册</h1>
+            <nav class="nav">
+                <a href="/" class="nav-link active">首页</a>
+                <a href="{% url 'photos:timeline' %}" class="nav-link">时间线</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="carousel-section">
+            <h2 class="section-title">精彩瞬间</h2>
+            <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrack">
+                    {% for photo in carousel_photos %}
+                    <div class="carousel-slide" data-index="{{ forloop.counter0 }}">
+                        <img src="{{ photo.image.url }}" alt="{{ photo.title }}" class="carousel-image">
+                        <div class="carousel-caption">
+                            <h3>{{ photo.title }}</h3>
+                            <p>{{ photo.taken_date }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="carousel-slide">
+                        <img src="https://picsum.photos/1200/600?random=1" alt="示例照片" class="carousel-image">
+                        <div class="carousel-caption">
+                            <h3>欢迎来到家庭相册</h3>
+                            <p>开始添加您的第一张照片吧</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-btn carousel-btn-prev" id="prevBtn">❮</button>
+                <button class="carousel-btn carousel-btn-next" id="nextBtn">❯</button>
+                <div class="carousel-indicators" id="carouselIndicators">
+                    {% for photo in carousel_photos %}
+                    <span class="indicator {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}"></span>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="recent-section">
+            <h2 class="section-title">最近照片</h2>
+            <div class="photo-grid" id="photoGrid">
+                {% for photo in recent_photos %}
+                <a href="{% url 'photos:photo_detail' photo.pk %}" class="photo-card">
+                    <div class="photo-card-image">
+                        <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
+                    </div>
+                    <div class="photo-card-info">
+                        <h3>{{ photo.title }}</h3>
+                        <span class="photo-date">{{ photo.taken_date }}</span>
+                    </div>
+                </a>
+                {% empty %}
+                <p class="empty-message">暂无照片，请在后台添加照片</p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 家庭相册 - 记录美好回忆</p>
+    </footer>
+
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="/" class="mobile-nav-item active">
+            <span class="nav-icon">🏠</span>
+            <span>首页</span>
+        </a>
+        <a href="{% url 'photos:timeline' %}" class="mobile-nav-item">
+            <span class="nav-icon">📅</span>
+            <span>时间线</span>
+        </a>
+    </nav>
+
+    <script src="/static/js/carousel.js"></script>
+</body>
+</html>

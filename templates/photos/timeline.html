@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间线 - 家庭相册</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/timeline.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">📷 家庭相册</h1>
+            <nav class="nav">
+                <a href="{% url 'photos:home' %}" class="nav-link">首页</a>
+                <a href="{% url 'photos:timeline' %}" class="nav-link active">时间线</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="timeline-header">
+            <h2 class="section-title">回忆时间线</h2>
+            <div class="year-nav" id="yearNav">
+                {% for album in albums %}
+                <button class="year-btn {% if forloop.first %}active{% endif %}" data-year="{{ album.year }}">
+                    {{ album.year }}
+                    <span class="year-count">{{ album.photo_count }}张</span>
+                </button>
+                {% empty %}
+                <p class="empty-message">暂无相册，请在后台添加</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="timeline-content" id="timelineContent">
+            {% for album in albums %}
+            <div class="year-section" data-year="{{ album.year }}" {% if not forloop.first %}style="display:none;"{% endif %}>
+                <h3 class="year-title">{{ album.year }}年</h3>
+                <div class="timeline-grid">
+                    {% for photo in album.photos.all %}
+                    <a href="{% url 'photos:photo_detail' photo.pk %}" class="timeline-card">
+                        <div class="timeline-card-image">
+                            <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
+                        </div>
+                        <div class="timeline-card-info">
+                            <h4>{{ photo.title }}</h4>
+                            <span class="photo-date">{{ photo.taken_date }}</span>
+                            {% if photo.description %}
+                            <p class="photo-desc">{{ photo.description|truncatechars:50 }}</p>
+                            {% endif %}
+                        </div>
+                    </a>
+                    {% empty %}
+                    <p class="empty-message">该相册暂无照片</p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 家庭相册 - 记录美好回忆</p>
+    </footer>
+
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="{% url 'photos:home' %}" class="mobile-nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>首页</span>
+        </a>
+        <a href="{% url 'photos:timeline' %}" class="mobile-nav-item active">
+            <span class="nav-icon">📅</span>
+            <span>时间线</span>
+        </a>
+    </nav>
+
+    <script src="/static/js/timeline.js"></script>
+</body>
+</html>
