@@ -1,0 +1,23 @@
+<view class="container">
+  <view class="album-header" wx:if="{{!loading}}">
+    <view class="album-meta">
+      <text class="album-name">{{album.name}}</text>
+      <text class="album-date">{{album.date_display}}</text>
+      <text class="album-count">{{photos.length}} 张照片</text>
+    </view>
+  </view>
+
+  <view class="photo-grid" wx:if="{{!loading}}">
+    <view class="photo-item" wx:for="{{photos}}" wx:key="id" bindtap="previewPhoto" data-index="{{index}}">
+      <image src="{{item.src}}" mode="aspectFill" loading="lazy"/>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <view class="empty-state" wx:if="{{!loading && photos.length === 0}}">
+    <text>暂无照片</text>
+  </view>
+</view>

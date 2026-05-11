@@ -1,0 +1,4 @@
+{
+  "desc": "关于我们",
+  "rules": [{ "action": "allow", "page": "*" }]
+}

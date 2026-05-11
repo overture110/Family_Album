@@ -1,0 +1,88 @@
+/* 时间线样式 */
+.timeline {
+  padding: 20rpx;
+}
+
+.year-section {
+  margin-bottom: 40rpx;
+}
+
+.year-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.year-text {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #8B7355;
+  margin-right: 20rpx;
+}
+
+.year-line {
+  flex: 1;
+  height: 2rpx;
+  background: #D4C5B5;
+}
+
+.album-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.album-card {
+  background: white;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05);
+}
+
+.album-cover {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+}
+
+.album-info {
+  flex: 1;
+  margin-left: 24rpx;
+}
+
+.album-name {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.album-date {
+  display: block;
+  font-size: 24rpx;
+  color: #8B7355;
+  margin-bottom: 8rpx;
+}
+
+.album-count {
+  display: block;
+  font-size: 22rpx;
+  color: #999;
+}
+
+.album-arrow {
+  font-size: 40rpx;
+  color: #ccc;
+  margin-left: 20rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 200rpx;
+  color: #999;
+}

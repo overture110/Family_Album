@@ -1,0 +1,29 @@
+<view class="container">
+  <view class="timeline" wx:if="{{!loading}}">
+    <view class="year-section" wx:for="{{years}}" wx:key="*this">
+      <view class="year-header">
+        <text class="year-text">{{item}}年</text>
+        <view class="year-line"></view>
+      </view>
+      <view class="album-list">
+        <view class="album-card" wx:for="{{albumsByYear[item]}}" wx:key="id" bindtap="viewAlbum" data-id="{{item.id}}">
+          <image src="{{item.cover_url}}" mode="aspectFill" class="album-cover"/>
+          <view class="album-info">
+            <text class="album-name">{{item.name}}</text>
+            <text class="album-date">{{item.date_display}}</text>
+            <text class="album-count">{{item.photo_count}} 张照片</text>
+          </view>
+          <view class="album-arrow">›</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <view class="empty-state" wx:if="{{!loading && albums.length === 0}}">
+    <text>暂无相册</text>
+  </view>
+</view>

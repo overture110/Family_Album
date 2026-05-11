@@ -1,0 +1,118 @@
+/* 首页样式 */
+.carousel-section {
+  margin-bottom: 30rpx;
+}
+
+.carousel {
+  width: 100%;
+  height: 400rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx;
+  background: linear-gradient(transparent, rgba(0,0,0,0.6));
+  color: white;
+}
+
+.caption-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.caption-date {
+  font-size: 22rpx;
+  opacity: 0.8;
+}
+
+/* 家训 */
+.motto-section {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.motto-header {
+  margin-bottom: 20rpx;
+}
+
+.motto-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.motto-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+}
+
+.motto-icon {
+  width: 60rpx;
+  height: 60rpx;
+  background: #8B7355;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.motto-content {
+  flex: 1;
+}
+
+.motto-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4rpx;
+}
+
+.motto-text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 最近照片 */
+.recent-section {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.more-btn {
+  color: #8B7355;
+  font-size: 24rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 100rpx;
+  color: #999;
+}

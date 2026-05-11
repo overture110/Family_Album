@@ -1,0 +1,36 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/timeline/timeline",
+    "pages/album/album",
+    "pages/photo/photo"
+  ],
+  "window": {
+    "navigationBarTitleText": "拾光 · 吾家",
+    "navigationBarBackgroundColor": "#8B7355",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#FAF8F5"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#8B7355",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-active.png"
+      },
+      {
+        "pagePath": "pages/timeline/timeline",
+        "text": "时间线",
+        "iconPath": "images/time.png",
+        "selectedIconPath": "images/time-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

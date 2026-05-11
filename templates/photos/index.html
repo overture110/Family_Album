@@ -20,6 +20,7 @@
             <nav class="nav-right">
                 <a href="{% url 'photos:motto' %}" class="nav-link btn-like">家训墙</a>
                 <a href="{% url 'photos:timeline' %}" class="nav-link btn-like">时间线</a>
+                <a href="{% url 'photos:manage_albums' %}" class="nav-link btn-like">管理相册</a>
             </nav>
         </div>
     </header>
@@ -30,7 +31,7 @@
             <div class="carousel-container">
                 <div class="carousel-track" id="carouselTrack">
                     {% for photo in carousel_photos %}
-                    <div class="carousel-slide" data-index="{{ forloop.counter0 }}">
+                    <div class="carousel-slide" data-index="{{ forloop.counter0 }}" title="{{ photo.title }}">
                         <img src="{{ photo.image.url }}" alt="{{ photo.title }}" class="carousel-image">
                         <div class="carousel-caption">
                             <h3>{{ photo.title }}</h3>

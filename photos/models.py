@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class Album(models.Model):
@@ -60,3 +61,31 @@ class Photo(models.Model):
         if self.album and not self.album.cover_photo:
             self.album.cover_photo = self
             self.album.save(update_fields=['cover_photo'])
+
+
+class LoginAttempt(models.Model):
+    device_id = models.CharField(max_length=255, unique=True)
+    login_count = models.IntegerField(default=0)
+    last_login_date = models.DateField(default=timezone.now)
+    is_blocked = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-last_login_date']
+
+    def __str__(self):
+        return f"{self.device_id} - {self.login_count} attempts on {self.last_login_date}"
+
+    def check_and_record_login(self):
+        today = timezone.now().date()
+        if self.last_login_date < today:
+            self.login_count = 0
+            self.is_blocked = False
+            self.last_login_date = today
+        if self.login_count >= 5:
+            self.is_blocked = True
+            return False
+        self.login_count += 1
+        self.save()
+        return True

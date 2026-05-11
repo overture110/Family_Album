@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>导入照片 - 家庭相册</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .import-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .import-title {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .file-upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+        .file-upload-area:hover {
+            border-color: var(--primary-color);
+            background: #f5f5f5;
+        }
+        .file-upload-area.dragover {
+            border-color: var(--primary-color);
+            background: #f0f0f0;
+        }
+        .file-upload-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .file-upload-text {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .file-upload-hint {
+            color: #999;
+            font-size: 0.85rem;
+        }
+        #fileInput {
+            display: none;
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 24px;
+            height: 24px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 24px;
+        }
+        .btn-import {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+        }
+        .btn-import:hover {
+            background: #7a6548;
+        }
+        .btn-import:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .folder-info {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .folder-info strong {
+            color: var(--primary-color);
+        }
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .nav-header h2 {
+            color: var(--primary-color);
+        }
+        .btn-logout {
+            padding: 8px 20px;
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-logout:hover {
+            background: #e0e0e0;
+        }
+        .file-count {
+            margin-top: 10px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="import-container">
+        <div class="nav-header">
+            <h2>📤 导入照片</h2>
+            <a href="{% url 'photos:logout' %}" class="btn-logout">退出登录</a>
+        </div>
+
+        <div id="successMessage" class="success-message" style="display:none;">
+            ✅ 导入成功！已上传 <span id="uploadCount">0</span> 张照片到相册：<span id="albumName"></span>
+        </div>
+
+        <form id="importForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title">标题 *</label>
+                <input type="text" id="title" name="title" placeholder="例如：全家福、生日派对等" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">详细描述</label>
+                <textarea id="description" name="description" placeholder="描述照片内容、拍摄地点等信息..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="taken_date">拍摄日期 *</label>
+                <input type="date" id="taken_date" name="taken_date" required>
+            </div>
+
+            <div class="folder-info" id="folderInfo">
+                📁 上传文件夹：<strong id="folderName">-</strong>
+                <br><small>文件夹年份将与拍摄日期年份自动对应</small>
+            </div>
+
+            <div class="form-group">
+                <label>选择照片 *</label>
+                <div class="file-upload-area" id="dropZone">
+                    <div class="file-upload-icon">📷</div>
+                    <p class="file-upload-text">点击或拖拽照片到此处</p>
+                    <p class="file-upload-hint">支持多选，可一次导入多张照片</p>
+                </div>
+                <input type="file" id="fileInput" name="photos" multiple accept="image/*">
+                <div class="preview-grid" id="previewGrid"></div>
+                <p class="file-count" id="fileCount"></p>
+            </div>
+
+            <button type="submit" class="btn-import" id="submitBtn">开始导入</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/" style="color: var(--primary-color);">← 返回首页</a>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const previewGrid = document.getElementById('previewGrid');
+        const fileCount = document.getElementById('fileCount');
+        const takenDateInput = document.getElementById('taken_date');
+        const folderNameEl = document.getElementById('folderName');
+        const importForm = document.getElementById('importForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        let selectedFiles = [];
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+            selectedFiles = [...selectedFiles, ...imageFiles];
+            updatePreview();
+        }
+
+        function updatePreview() {
+            previewGrid.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.onload = () => URL.revokeObjectURL(img.src);
+                const btn = document.createElement('button');
+                btn.className = 'remove-btn';
+                btn.innerHTML = '×';
+                btn.onclick = () => {
+                    selectedFiles.splice(index, 1);
+                    updatePreview();
+                };
+                div.appendChild(img);
+                div.appendChild(btn);
+                previewGrid.appendChild(div);
+            });
+            fileCount.textContent = selectedFiles.length > 0 ? `已选择 ${selectedFiles.length} 张照片` : '';
+        }
+
+        takenDateInput.addEventListener('change', () => {
+            const date = takenDateInput.value;
+            if (date) {
+                const year = date.substring(0, 4);
+                const month = date.substring(5, 7);
+                folderNameEl.textContent = `${year}${month}`;
+            }
+        });
+
+        importForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (selectedFiles.length === 0) {
+                alert('请至少选择一张照片');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '正在导入...';
+
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('taken_date', takenDateInput.value);
+            selectedFiles.forEach(file => {
+                formData.append('photos', file);
+            });
+
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            try {
+                const response = await fetch('/api/upload/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('uploadCount').textContent = result.uploaded.length;
+                    document.getElementById('albumName').textContent = result.album_name;
+                    successMessage.style.display = 'block';
+                    selectedFiles = [];
+                    updatePreview();
+                    importForm.reset();
+                    folderNameEl.textContent = '-';
+                } else {
+                    alert('导入失败: ' + result.error);
+                }
+            } catch (error) {
+                alert('上传出错: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '开始导入';
+            }
+        });
+    </script>
+</body>
+</html>

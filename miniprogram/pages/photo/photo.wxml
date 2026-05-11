@@ -1,0 +1,28 @@
+<view class="container" wx:if="{{!loading}}">
+  <view class="photo-view" bindtap="previewImage">
+    <image src="{{photo.src}}" mode="aspectFit" class="photo-image"/>
+  </view>
+
+  <view class="photo-info">
+    <view class="info-row">
+      <text class="info-label">标题</text>
+      <text class="info-value">{{photo.title}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">拍摄日期</text>
+      <text class="info-value">{{photo.date}}</text>
+    </view>
+    <view class="info-row" wx:if="{{album && album.name}}">
+      <text class="info-label">所属相册</text>
+      <text class="info-value">{{album.name}}</text>
+    </view>
+  </view>
+
+  <view class="action-buttons">
+    <button class="action-btn" bindtap="saveImage">保存到相册</button>
+  </view>
+</view>
+
+<view class="empty-state" wx:if="{{loading}}">
+  <text>加载中...</text>
+</view>

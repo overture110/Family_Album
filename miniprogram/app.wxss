@@ -1,0 +1,34 @@
+page {
+  background-color: #FAF8F5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.container {
+  padding: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  color: #8B7355;
+  font-weight: 600;
+  padding: 20rpx 0;
+}
+
+.photo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 16rpx;
+}
+
+.photo-grid .photo-item {
+  width: calc(50% - 8rpx);
+  aspect-ratio: 1;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.photo-grid .photo-item image {
+  width: 100%;
+  height: 100%;
+}

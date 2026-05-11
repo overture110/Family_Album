@@ -1,0 +1,48 @@
+<view class="container">
+  <!-- 轮播图 -->
+  <view class="carousel-section" wx:if="{{carouselPhotos.length > 0}}">
+    <swiper class="carousel" indicator-dots autoplay circular interval="3000">
+      <swiper-item wx:for="{{carouselPhotos}}" wx:key="id" bindtap="viewPhoto" data-id="{{item.id}}">
+        <image src="{{item.src}}" mode="aspectFill" class="carousel-image"/>
+        <view class="carousel-caption">
+          <text class="caption-title">{{item.title}}</text>
+          <text class="caption-date">{{item.date}}</text>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 家训 -->
+  <view class="motto-section">
+    <view class="motto-header">
+      <text class="section-title">我们这一家 · 五项家风</text>
+    </view>
+    <view class="motto-list">
+      <view class="motto-item" wx:for="{{mottoList}}" wx:key="title">
+        <view class="motto-icon">{{item.subtitle}}</view>
+        <view class="motto-content">
+          <text class="motto-title">{{item.title}}</text>
+          <text class="motto-text">{{item.content}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最近照片 -->
+  <view class="recent-section">
+    <view class="section-header">
+      <text class="section-title">最近照片</text>
+      <text class="more-btn" bindtap="goTimeline">查看全部 ›</text>
+    </view>
+    <view class="photo-grid">
+      <view class="photo-item" wx:for="{{recentPhotos}}" wx:key="id" bindtap="viewPhoto" data-id="{{item.id}}">
+        <image src="{{item.src}}" mode="aspectFill" loading="lazy"/>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>
