@@ -5,6 +5,42 @@ import io
 import os
 
 
+def compress_image(image_field, max_size=(1920, 1920), quality=85):
+    """
+    压缩图片文件
+
+    参数:
+        image_field: Django的ImageField或FileField
+        max_size: 最大尺寸元组，默认(1920, 1920)
+        quality: JPEG质量，默认85
+
+    返回:
+        bool: 是否成功压缩
+    """
+    try:
+        if not image_field:
+            return False
+
+        filepath = image_field.path
+        if not os.path.exists(filepath):
+            return False
+
+        img = Image.open(filepath)
+
+        if img.mode in ('RGBA', 'P'):
+            img = img.convert('RGB')
+
+        img.thumbnail(max_size, Image.Resampling.LANCZOS)
+
+        img.save(filepath, 'JPEG', quality=quality, optimize=True)
+
+        return True
+
+    except Exception as e:
+        print(f"图片压缩失败: {e}")
+        return False
+
+
 class Album(models.Model):
     name = models.CharField(max_length=100)
     folder_name = models.CharField(max_length=100, unique=True, default='default_album')
