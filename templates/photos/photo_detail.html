@@ -58,15 +58,23 @@
 <body>
     <header class="header">
         <div class="container">
-            <h1 class="logo">📷 家庭相册</h1>
-            <nav class="nav">
+            <nav class="nav-left">
                 <a href="{% url 'photos:home' %}" class="nav-link">首页</a>
-                <a href="{% url 'photos:timeline' %}" class="nav-link">时间线</a>
+            </nav>
+            <nav class="nav-right">
+                <a href="{% url 'photos:motto' %}" class="nav-link btn-like">家训墙</a>
+                <a href="{% url 'photos:timeline' %}" class="nav-link btn-like">时间线</a>
+                <a href="{% url 'photos:manage_albums' %}" class="nav-link btn-like">管理相册</a>
             </nav>
         </div>
     </header>
 
     <main class="main">
+        <div class="home-hero">
+            <h1 class="hero-title">拾光 · 吾家</h1>
+            <p class="hero-subtitle">记录每一寸明媚，传承每一份家温</p>
+        </div>
+
         <div class="photo-detail">
             <img src="{{ photo.image.url }}" alt="{{ photo.title }}" class="photo-detail-image">
             <div class="photo-detail-info">
