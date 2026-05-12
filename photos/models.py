@@ -1,5 +1,8 @@
 from django.db import models
 from django.utils import timezone
+from PIL import Image
+import io
+import os
 
 
 class Album(models.Model):
@@ -57,10 +60,33 @@ class Photo(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
+        if self.pk is None:
+            img = Image.open(self.image)
+            if img.mode in ('RGBA', 'P'):
+                img = img.convert('RGB')
+
+            max_size = (1920, 1920)
+            img.thumbnail(max_size, Image.Resampling.LANCZOS)
+
+            output = io.BytesIO()
+            img.save(output, format='JPEG', quality=85, optimize=True)
+            output.seek(0)
+
+            filename = os.path.basename(self.image.name)
+            self.image.save(filename, output, save=False)
+
         super().save(*args, **kwargs)
         if self.album and not self.album.cover_photo:
             self.album.cover_photo = self
             self.album.save(update_fields=['cover_photo'])
+
+    @property
+    def thumbnail_url(self):
+        return self.image.url
+
+    @property
+    def medium_url(self):
+        return self.image.url
 
 
 class LoginAttempt(models.Model):

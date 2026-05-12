@@ -41,7 +41,7 @@
                     <article class="album-card">
                         <div class="card-cover">
                             {% if album.cover_photo %}
-                            <img src="{{ album.cover_photo.image.url }}" alt="{{ album.name }}" loading="lazy">
+                            <img src="{{ album.cover_photo.medium_url }}" alt="{{ album.name }}" loading="lazy">
                             {% else %}
                             <img src="https://picsum.photos/600/400?random={{ album.id }}" alt="{{ album.name }}" loading="lazy">
                             {% endif %}
